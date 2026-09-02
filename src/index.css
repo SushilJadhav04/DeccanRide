@@ -1,1 +1,30 @@
 @import "tailwindcss";
+
+/* 1. Tell Tailwind CSS v4 to recognize the .dark class on <html> */
+@variant dark (&:where(.dark, .dark *));
+
+/* 2. Global CSS Variables for Light / Dark Mode */
+:root {
+  --bg-main: #ffffff;
+  --bg-surface: #f4f4f5;
+  --bg-card: #ffffff;
+  --text-main: #09090b;
+  --text-muted: #71717a;
+  --border-color: #e4e4e7;
+}
+
+.dark {
+  --bg-main: #121212;
+  --bg-surface: #181818;
+  --bg-card: #000000;
+  --text-main: #ffffff;
+  --text-muted: #a1a1aa;
+  --border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* 3. Global body background and text smooth transitions */
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
