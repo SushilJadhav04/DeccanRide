@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -82,6 +83,7 @@ export default function App() {
             }
           />
         </Routes>
+        <SpeedInsights />
       </BrowserRouter>
     </ThemeProvider>
   );
