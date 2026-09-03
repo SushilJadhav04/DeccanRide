@@ -3,12 +3,16 @@ import { submitEnquiry } from '../services/enquiryService';
 import { getVehicles } from '../services/vehicleService';
 import { isValidLocation } from '../data/locations';
 import LocationInput from '../components/LocationInput';
+import { calculateFare } from '../services/pricingService';
 
 export default function Contact() {
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const [fare, setFare] = useState(null);
+  const [isCalculatingFare, setIsCalculatingFare] = useState(false);
+  const [fareError, setFareError] = useState('');
 
   const [formData, setFormData] = useState({
     name: '',
@@ -127,6 +131,43 @@ export default function Contact() {
     } else {
       setError(`Failed to submit booking: ${result.error}`);
     }
+  };
+  const handleFetchPrice = async () => {
+    setFareError('');
+    setFare(null);
+
+    if (!formData.pickup || !formData.drop) {
+      setFareError('Please select pickup and drop locations.');
+      return;
+    }
+
+    if (formData.pickup === formData.drop) {
+      setFareError('Pickup and drop locations cannot be the same.');
+      return;
+    }
+
+    if (!formData.vehicle_id) {
+      setFareError('Please select a vehicle.');
+      return;
+    }
+
+    setIsCalculatingFare(true);
+
+    const result = await calculateFare({
+      vehicleId: parseInt(formData.vehicle_id),
+      pickup: formData.pickup,
+      drop: formData.drop,
+      tripType: formData.trip_type,
+    });
+
+    setIsCalculatingFare(false);
+
+    if (!result.success) {
+      setFareError(result.error);
+      return;
+    }
+
+    setFare(result);
   };
 
   return (
@@ -264,6 +305,34 @@ export default function Contact() {
                   className="w-full px-4 py-3.5 bg-gray-50 dark:bg-black border border-gray-300 dark:border-white/15 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:border-black dark:focus:border-white transition text-base sm:text-sm leading-relaxed rounded-none resize-none"
                 />
               </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
+                <div>
+                  <label className="block text-s uppercase tracking-wider text-gray-700 dark:text-gray-300 font-bold mb-2">
+                    Travel Date *
+                  </label>
+                  <input
+                    type="date"
+                    name="travel_date"
+                    value={formData.travel_date}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3.5 bg-gray-50 dark:bg-black border border-gray-300 dark:border-white/15 text-black dark:text-white dark:[color-scheme:dark] focus:outline-none focus:border-black dark:focus:border-white transition text-base sm:text-sm cursor-pointer rounded-none"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-s uppercase tracking-wider text-gray-700 dark:text-gray-300 font-bold mb-2">
+                    Travel Time
+                  </label>
+                  <input
+                    type="time"
+                    name="travel_time"
+                    value={formData.travel_time}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3.5 bg-gray-50 dark:bg-black border border-gray-300 dark:border-white/15 text-black dark:text-white dark:[color-scheme:dark] focus:outline-none focus:border-black dark:focus:border-white transition text-base sm:text-sm cursor-pointer rounded-none"
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Column 02: Itinerary & Vehicle Specs */}
@@ -292,35 +361,6 @@ export default function Contact() {
                   placeholder="Select drop spot"
                   required={true}
                 />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
-                <div>
-                  <label className="block text-s uppercase tracking-wider text-gray-700 dark:text-gray-300 font-bold mb-2">
-                    Travel Date *
-                  </label>
-                  <input
-                    type="date"
-                    name="travel_date"
-                    value={formData.travel_date}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3.5 bg-gray-50 dark:bg-black border border-gray-300 dark:border-white/15 text-black dark:text-white dark:[color-scheme:dark] focus:outline-none focus:border-black dark:focus:border-white transition text-base sm:text-sm cursor-pointer rounded-none"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-s uppercase tracking-wider text-gray-700 dark:text-gray-300 font-bold mb-2">
-                    Travel Time
-                  </label>
-                  <input
-                    type="time"
-                    name="travel_time"
-                    value={formData.travel_time}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3.5 bg-gray-50 dark:bg-black border border-gray-300 dark:border-white/15 text-black dark:text-white dark:[color-scheme:dark] focus:outline-none focus:border-black dark:focus:border-white transition text-base sm:text-sm cursor-pointer rounded-none"
-                  />
-                </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6">
@@ -394,6 +434,95 @@ export default function Contact() {
                     required
                   />
                 </div>
+              </div>
+
+              <div className="mt-2 flex flex-col items-center">
+                <button
+                  type="button"
+                  onClick={handleFetchPrice}
+                  disabled={isCalculatingFare}
+                  className="w-full max-w-md px-8 py-3.5 border border-black dark:border-white bg-white dark:bg-black text-black dark:text-white font-bold uppercase tracking-[0.12em] text-xs hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {isCalculatingFare ? 'Calculating...' : 'Fetch Price'}
+                </button>
+                {fareError && (
+                  <p className="mt-3 w-full max-w-md text-sm text-red-500">
+                    {fareError}
+                  </p>
+                )}
+
+                {fare && (
+                  <div className="mt-5 w-full max-w-md border border-gray-300 dark:border-white/15 bg-gray-50 dark:bg-black p-5 sm:p-6 text-black dark:text-white">
+                    <div className="flex items-center justify-between gap-4 border-b border-gray-200 dark:border-white/10 pb-4">
+                      <h3 className="text-base sm:text-lg font-bold tracking-tight">
+                        Estimated Fare
+                      </h3>
+                      <span className="text-[10px] uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400">
+                        {fare.tripType === 'round-trip'
+                          ? 'Round Trip'
+                          : 'One Way'}
+                      </span>
+                    </div>
+
+                    <div className="mt-4 space-y-3 text-sm">
+                      <div className="flex items-start justify-between gap-6">
+                        <span className="text-gray-600 dark:text-gray-400">
+                          Vehicle Base Fare
+                        </span>
+                        <span className="font-medium whitespace-nowrap">
+                          ₹{fare.baseFare.toLocaleString('en-IN')}
+                        </span>
+                      </div>
+
+                      <div className="flex items-start justify-between gap-6">
+                        <span className="text-gray-600 dark:text-gray-400">
+                          Pickup Location Charge
+                        </span>
+                        <span className="font-medium whitespace-nowrap">
+                          ₹{fare.pickupCharge.toLocaleString('en-IN')}
+                        </span>
+                      </div>
+
+                      <div className="flex items-start justify-between gap-6">
+                        <span className="text-gray-600 dark:text-gray-400">
+                          Drop Location Charge
+                        </span>
+                        <span className="font-medium whitespace-nowrap">
+                          ₹{fare.dropCharge.toLocaleString('en-IN')}
+                        </span>
+                      </div>
+
+                      {fare.tripType === 'round-trip' && (
+                        <div className="flex items-start justify-between gap-6">
+                          <span className="text-gray-600 dark:text-gray-400">
+                            Round Trip
+                          </span>
+                          <span className="font-medium whitespace-nowrap">
+                            × 2
+                          </span>
+                        </div>
+                      )}
+
+                      <div className="flex items-start justify-between gap-6">
+                        <span className="text-gray-600 dark:text-gray-400">
+                          Waiting Charge
+                        </span>
+                        <span className="font-medium whitespace-nowrap">
+                          ₹{fare.waitingCharge.toLocaleString('en-IN')}
+                        </span>
+                      </div>
+
+                      <div className="mt-4 flex items-end justify-between gap-6 border-t border-gray-300 dark:border-white/15 pt-4">
+                        <span className="text-sm font-bold uppercase tracking-[0.08em]">
+                          Total Fare
+                        </span>
+                        <span className="text-xl font-black whitespace-nowrap">
+                          ₹{fare.totalFare.toLocaleString('en-IN')}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
