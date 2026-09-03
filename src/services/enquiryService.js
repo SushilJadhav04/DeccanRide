@@ -18,6 +18,9 @@ export async function submitEnquiry(enquiryData) {
           passengers: enquiryData.passengers,
           message: enquiryData.message || null,
           status: 'new',
+          one_way_fare: enquiryData.one_way_fare,
+          waiting_charge: enquiryData.waiting_charge || 0,
+          total_fare: enquiryData.total_fare,
         }
       ])
 

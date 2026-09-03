@@ -107,6 +107,9 @@ export default function Contact() {
       ...formData,
       vehicle_id: parseInt(formData.vehicle_id),
       passengers: parseInt(formData.passengers),
+      one_way_fare: fare ? fare.oneWayFare : null,
+      waiting_charge: fare ? fare.waitingCharge : 0,
+      total_fare: fare ? fare.totalFare : null,
     });
 
     setLoading(false);
