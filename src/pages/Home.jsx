@@ -43,7 +43,7 @@ export default function Home() {
                 to="/about"
                 className="border border-white/20 text-white px-10 py-4 sm:px-12 sm:py-5 font-bold uppercase tracking-[0.2em] text-s hover:bg-white hover:text-black transition-all rounded-none"
               >
-                Our Standards
+                About Us
               </Link>
             </div>
           </div>
@@ -86,10 +86,10 @@ export default function Home() {
 
                 <div className="pt-4 border-t border-gray-200 dark:border-white/10">
                   <Link
-                    to="/contact"
+                    to="/pune-to-mumbai-cab"
                     className="block text-center bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200 py-3.5 font-bold text-s uppercase tracking-[0.2em] transition-all rounded-none"
                   >
-                    Book Pune to Mumbai →
+                    Book Pune to Mumbai
                   </Link>
                 </div>
               </div>
@@ -116,10 +116,10 @@ export default function Home() {
 
                 <div className="pt-4 border-t border-gray-200 dark:border-white/10">
                   <Link
-                    to="/contact"
+                    to="/mumbai-to-pune-cab"
                     className="block text-center bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200 py-3.5 font-bold text-s uppercase tracking-[0.2em] transition-all rounded-none"
                   >
-                    Book Mumbai to Pune →
+                    Book Mumbai to Pune
                   </Link>
                 </div>
               </div>
