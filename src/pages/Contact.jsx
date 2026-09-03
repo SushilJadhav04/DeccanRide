@@ -304,7 +304,7 @@ export default function Contact() {
                     name="travel_date"
                     value={formData.travel_date}
                     onChange={handleChange}
-                    className="w-full px-4 py-3.5 bg-gray-50 dark:bg-black border border-gray-300 dark:border-white/15 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white transition text-base sm:text-sm cursor-pointer rounded-none"
+                    className="w-full px-4 py-3.5 bg-gray-50 dark:bg-black border border-gray-300 dark:border-white/15 text-black dark:text-white dark:[color-scheme:dark] focus:outline-none focus:border-black dark:focus:border-white transition text-base sm:text-sm cursor-pointer rounded-none"
                     required
                   />
                 </div>
@@ -318,7 +318,7 @@ export default function Contact() {
                     name="travel_time"
                     value={formData.travel_time}
                     onChange={handleChange}
-                    className="w-full px-4 py-3.5 bg-gray-50 dark:bg-black border border-gray-300 dark:border-white/15 text-black dark:text-white focus:outline-none focus:border-black dark:focus:border-white transition text-base sm:text-sm cursor-pointer rounded-none"
+                    className="w-full px-4 py-3.5 bg-gray-50 dark:bg-black border border-gray-300 dark:border-white/15 text-black dark:text-white dark:[color-scheme:dark] focus:outline-none focus:border-black dark:focus:border-white transition text-base sm:text-sm cursor-pointer rounded-none"
                   />
                 </div>
               </div>
