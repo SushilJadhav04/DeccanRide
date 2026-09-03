@@ -2,12 +2,90 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/logo.png"/>
+
+    <!-- Basic SEO -->
+    <title>DeccanRide | Pune to Mumbai Premium Cab Service</title>
+
+    <meta
+      name="description"
+      content="DeccanRide provides reliable premium intercity cab services between Pune and Mumbai. Book comfortable one-way and round-trip rides with professional drivers."
+    />
+
+    <meta
+      name="keywords"
+      content="Pune Mumbai cab, Mumbai Pune cab, Pune to Mumbai taxi, Mumbai to Pune taxi, intercity cab, DeccanRide"
+    />
+
+    <meta name="author" content="DeccanRide" />
+
+    <!-- Responsive Design -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Deccan Ride</title>
+
+    <!-- Search Engine Crawling -->
+    <meta name="robots" content="index, follow" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://deccanride.vercel.app/" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/logo.png" />
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="DeccanRide | Pune ↔ Mumbai Cab Service" />
+    <meta
+      property="og:description"
+      content="Premium intercity cab service between Pune and Mumbai."
+    />
+    <meta property="og:url" content="https://deccanride.vercel.app/" />
+    <meta property="og:site_name" content="DeccanRide" />
+    <meta
+      property="og:image"
+      content="https://deccanride.vercel.app/logo.png"
+    />
+
+    <!-- Twitter / X Sharing -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="DeccanRide | Pune ↔ Mumbai Cab Service"
+    />
+    <meta
+      name="twitter:description"
+      content="Premium intercity cab service between Pune and Mumbai."
+    />
+    <meta
+      name="twitter:image"
+      content="https://deccanride.vercel.app/logo.png"
+    />
+
+    <!-- Local Business / Service Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "TransportationService",
+        "name": "DeccanRide",
+        "description": "Premium intercity cab service between Pune and Mumbai.",
+        "url": "https://deccanride.vercel.app/",
+        "logo": "https://deccanride.vercel.app/logo.png",
+        "areaServed": [
+          {
+            "@type": "City",
+            "name": "Pune"
+          },
+          {
+            "@type": "City",
+            "name": "Mumbai"
+          }
+        ],
+        "serviceType": "Intercity Cab Service"
+      }
+    </script>
   </head>
+
   <body>
     <div id="root"></div>
+
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
