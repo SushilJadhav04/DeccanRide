@@ -153,9 +153,40 @@ export default function Contact() {
       <div className="max-w-7xl mx-auto px-4 sm:px-8 md:px-12 lg:px-16 py-10 sm:py-16">
         {/* Status Alerts */}
         {submitted && (
-          <div className="mb-8 p-4 bg-black text-white dark:bg-white dark:text-black font-semibold text-s sm:text-sm rounded-none border border-black dark:border-white text-center">
-            ✓ Booking submitted successfully! Our dispatch team will contact you
-            shortly.
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
+            <div className="relative w-full max-w-md bg-white dark:bg-[#121212] text-black dark:text-white border border-gray-200 dark:border-white/10 shadow-2xl p-8 sm:p-10 text-center">
+              {/* Close Button */}
+              <button
+                type="button"
+                onClick={() => setSubmitted(false)}
+                className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white transition"
+                aria-label="Close confirmation"
+              >
+                ✕
+              </button>
+
+              {/* Success Icon */}
+              <div className="w-14 h-14 mx-auto mb-6 rounded-full border border-black dark:border-white flex items-center justify-center text-xl">
+                ✓
+              </div>
+
+              <h2 className="text-2xl sm:text-3xl font-black tracking-tight mb-3">
+                Reservation Confirmed
+              </h2>
+
+              <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base leading-relaxed">
+                Your booking request has been submitted successfully. Our
+                dispatch team will contact you shortly.
+              </p>
+
+              <button
+                type="button"
+                onClick={() => setSubmitted(false)}
+                className="mt-8 px-8 py-3 bg-black text-white dark:bg-white dark:text-black font-bold uppercase tracking-[0.15em] text-xs hover:opacity-80 transition"
+              >
+                Continue
+              </button>
+            </div>
           </div>
         )}
 
