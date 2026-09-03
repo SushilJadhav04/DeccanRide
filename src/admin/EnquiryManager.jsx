@@ -151,26 +151,29 @@ export default function EnquiryManager() {
         </div>
       ) : (
         <div className="bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-[#222] rounded-md overflow-x-auto shadow-sm dark:shadow-2xl transition-colors">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full min-w-[760px] lg:min-w-0 text-left border-collapse">
             <thead>
               <tr className="border-b border-gray-200 dark:border-[#222] bg-gray-50 dark:bg-[#111]">
                 <th className="px-4 py-3.5 text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
-                  ID
+                  Cus_ID
                 </th>
                 <th className="px-4 py-3.5 text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
                   Customer
                 </th>
-                <th className="px-4 py-3.5 text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                <th className="hidden md:table-cell px-4 py-3.5 text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
                   Contact
                 </th>
-                <th className="px-4 py-3.5 text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                <th className="hidden sm:table-cell px-4 py-3.5 text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
                   Route
                 </th>
-                <th className="px-4 py-3.5 text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                <th className="hidden lg:table-cell px-4 py-3.5 text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
                   Travel Date
                 </th>
-                <th className="px-4 py-3.5 text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 text-center">
+                <th className="hidden lg:table-cell px-4 py-3.5 text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 text-center">
                   Passengers
+                </th>
+                <th className="px-4 py-3.5 text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                  Fare
                 </th>
                 <th className="px-4 py-3.5 text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
                   Status
@@ -186,13 +189,13 @@ export default function EnquiryManager() {
                   key={enquiry.id}
                   className="hover:bg-gray-50 dark:hover:bg-[#111] transition-colors"
                 >
-                  <td className="px-4 py-4 text-s font-mono font-bold text-gray-500 dark:text-gray-400">
+                  <td className="px-4 py-4 text-s font-mono font-bold text-gray-500 dark:text-gray-400 whitespace-nowrap">
                     #{enquiry.id}
                   </td>
-                  <td className="px-4 py-4 text-s font-semibold text-black dark:text-white">
+                  <td className="px-4 py-4 text-s font-semibold text-black dark:text-white max-w-[150px] truncate">
                     {enquiry.name}
                   </td>
-                  <td className="px-4 py-4 text-s space-y-1">
+                  <td className="hidden md:table-cell px-4 py-4 text-s space-y-1">
                     <a
                       href={`tel:${enquiry.phone}`}
                       className="block text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"
@@ -206,7 +209,7 @@ export default function EnquiryManager() {
                       {enquiry.email}
                     </a>
                   </td>
-                  <td className="px-4 py-4 text-s">
+                  <td className="hidden sm:table-cell px-4 py-4 text-s">
                     <span className="text-black dark:text-white font-medium">
                       {enquiry.pickup}
                     </span>
@@ -214,12 +217,37 @@ export default function EnquiryManager() {
                       &rarr; {enquiry.drop}
                     </span>
                   </td>
-                  <td className="px-4 py-4 text-s text-gray-600 dark:text-gray-300 font-mono">
+                  <td className="hidden lg:table-cell px-4 py-4 text-s text-gray-600 dark:text-gray-300 font-mono">
                     {new Date(enquiry.travel_date).toLocaleDateString()}
                   </td>
-                  <td className="px-4 py-4 text-s text-center font-mono font-semibold text-black dark:text-white">
+                  <td className="hidden lg:table-cell px-4 py-4 text-s text-center font-mono font-semibold text-black dark:text-white">
                     {enquiry.passengers}
                   </td>
+                  <td className="px-4 py-4 text-s whitespace-nowrap">
+                    <div className="font-bold text-black dark:text-white">
+                      {enquiry.total_fare != null
+                        ? `₹${Number(enquiry.total_fare).toLocaleString('en-IN')}`
+                        : '—'}
+                    </div>
+                    {enquiry.total_fare != null && (
+                      <div className="mt-1 text-[10px] text-gray-500 dark:text-gray-400">
+                        One Way ₹
+                        {Number(enquiry.one_way_fare || 0).toLocaleString(
+                          'en-IN'
+                        )}
+                        {Number(enquiry.waiting_charge || 0) > 0 && (
+                          <>
+                            {' '}
+                            · Wait ₹
+                            {Number(enquiry.waiting_charge).toLocaleString(
+                              'en-IN'
+                            )}
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </td>
+
                   <td className="px-4 py-4 text-s">
                     <select
                       value={enquiry.status}
@@ -255,7 +283,7 @@ export default function EnquiryManager() {
                       </option>
                     </select>
                   </td>
-                  <td className="px-4 py-4 text-s text-right">
+                  <td className="px-4 py-4 text-s text-right whitespace-nowrap">
                     <button
                       onClick={() => deleteEnquiry(enquiry.id)}
                       className="px-3 py-1.5 bg-transparent border border-gray-300 dark:border-[#333] hover:border-black dark:hover:border-white text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white rounded-md text-[10px] uppercase font-mono tracking-wider transition-all active:scale-[0.98]"
