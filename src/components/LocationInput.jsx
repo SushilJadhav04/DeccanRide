@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { PUNE_LOCATIONS, MUMBAI_LOCATIONS } from '../data/locations';
 
 export default function LocationInput({
@@ -8,6 +9,8 @@ export default function LocationInput({
   city = null,
   required = false,
 }) {
+  const [isOpen, setIsOpen] = useState(false);
+
   let locations;
 
   if (city === 'Pune' || city === 'pune') {
@@ -17,6 +20,15 @@ export default function LocationInput({
   } else {
     locations = [...PUNE_LOCATIONS, ...MUMBAI_LOCATIONS];
   }
+
+  const filteredLocations = locations.filter((location) =>
+    location.name.toLowerCase().includes((value || '').toLowerCase())
+  );
+
+  const handleSelect = (location) => {
+    onChange(location.name);
+    setIsOpen(false);
+  };
 
   return (
     <div className="relative font-sans">
@@ -28,32 +40,21 @@ export default function LocationInput({
       </label>
 
       <div className="relative">
-        <select
+        <input
+          type="text"
           value={value || ''}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => {
+            onChange(e.target.value);
+            setIsOpen(true);
+          }}
+          onFocus={() => setIsOpen(true)}
+          placeholder={placeholder}
           required={required}
-          className="w-full appearance-none px-4 py-3.5 pr-10 bg-white dark:bg-[#121212] border border-gray-300 dark:border-white/10 rounded-xl text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:border-black dark:focus:border-white transition text-sm cursor-pointer shadow-sm"
-        >
-          <option
-            value=""
-            disabled
-            className="bg-white text-gray-500 dark:bg-[#1e1e1e] dark:text-gray-500"
-          >
-            {placeholder}
-          </option>
+          autoComplete="off"
+          className="w-full px-4 py-3.5 pr-10 bg-white dark:bg-[#121212] border border-gray-300 dark:border-white/10 rounded-xl text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:border-black dark:focus:border-white transition text-sm shadow-sm"
+        />
 
-          {locations.map((location) => (
-            <option
-              key={location.id}
-              value={location.name}
-              className="bg-white text-black dark:bg-[#1e1e1e] dark:text-white"
-            >
-              {location.name}
-            </option>
-          ))}
-        </select>
-
-        {/* Custom Dropdown Arrow */}
+        {/* Dropdown Arrow */}
         <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500 dark:text-gray-400">
           <svg
             className="w-4 h-4"
@@ -69,6 +70,27 @@ export default function LocationInput({
             />
           </svg>
         </div>
+
+        {isOpen && filteredLocations.length > 0 && (
+          <div className="absolute z-50 w-full mt-1 max-h-60 overflow-y-auto bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-white/10 rounded-xl shadow-lg">
+            {filteredLocations.map((location) => (
+              <button
+                key={location.id}
+                type="button"
+                onMouseDown={() => handleSelect(location)}
+                className="w-full text-left px-4 py-3 text-sm text-black dark:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition"
+              >
+                {location.name}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {isOpen && value && filteredLocations.length === 0 && (
+          <div className="absolute z-50 w-full mt-1 bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-white/10 rounded-xl shadow-lg px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+            No matching locations found
+          </div>
+        )}
       </div>
     </div>
   );
